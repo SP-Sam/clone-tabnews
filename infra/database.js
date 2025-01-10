@@ -1,25 +1,13 @@
 import { Client } from "pg";
 
 const query = async (queryObject) => {
-  const caCertificate = process.env.CA_CERTIFICATE;
-
-  console.log("CA Certificate: ", caCertificate);
-
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-    ssl: process.env.NODE_ENV === "production" ? true : false,
-  });
-
-  console.log("DB Credentials: ", {
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    user: process.env.POSTGRES_USER,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
+    ssl: getSSLValues(),
   });
 
   try {
@@ -39,3 +27,13 @@ const query = async (queryObject) => {
 export default {
   query: query,
 };
+
+function getSSLValues() {
+  if (process.env.POSTGRES_CA) {
+    return {
+      ca: process.env.POSTGRES_CA,
+    };
+  }
+
+  return process.env.NODE_ENV === "production" ? true : false;
+}
