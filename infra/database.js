@@ -1,12 +1,19 @@
 import { Client } from "pg";
+import fs from "fs";
 
 const query = async (queryObject) => {
+  const caCertificate = fs.readFileSync("./ca.pem").toString();
+
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
+    ssl: {
+      rejectUnauthorized: true,
+      ca: caCertificate,
+    },
   });
 
   console.log("DB Credentials: ", {
