@@ -1,8 +1,7 @@
 import { Client } from "pg";
-import fs from "fs";
 
 const query = async (queryObject) => {
-  const caCertificate = fs.readFileSync("certificates/ca.pem").toString();
+  const caCertificate = process.env.CA_CERTIFICATE;
 
   console.log("CA Certificate: ", caCertificate);
 
