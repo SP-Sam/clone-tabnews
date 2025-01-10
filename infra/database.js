@@ -2,7 +2,9 @@ import { Client } from "pg";
 import fs from "fs";
 
 const query = async (queryObject) => {
-  const caCertificate = fs.readFileSync("./ca.pem").toString();
+  const caCertificate = fs.readFileSync("certificates/ca.pem").toString();
+
+  console.log("CA Certificate: ", caCertificate);
 
   const client = new Client({
     host: process.env.POSTGRES_HOST,
@@ -10,7 +12,7 @@ const query = async (queryObject) => {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-    ssl: {
+    ssl: process.env.NODE_ENV === "production" && {
       rejectUnauthorized: true,
       ca: caCertificate,
     },
