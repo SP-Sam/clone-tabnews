@@ -10,6 +10,7 @@ async function query(queryObject: string | QueryConfig) {
     user: POSTGRES_USER,
     database: POSTGRES_DB,
     password: POSTGRES_PASSWORD,
+    ssl: process.env.NODE_ENV === "development" ? false : true,
   });
 
   try {
