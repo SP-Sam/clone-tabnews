@@ -6,9 +6,15 @@ import database from "infra/database";
 async function migrations(request: NextApiRequest, response: NextApiResponse) {
   const dbClient = await database.getNewClient();
 
+  // Usa pasta compilada em produção, .ts local
+  const isProd = process.env.NODE_ENV === "production";
+  const migrationsDir = isProd
+    ? join("infra", "migrations-js")
+    : join("infra", "migrations");
+
   const defaultMigrationOptions: RunnerOption = {
     dbClient: dbClient,
-    dir: join("infra", "migrations"),
+    dir: migrationsDir,
     direction: "up",
     migrationsTable: "pgmigrations",
   };
