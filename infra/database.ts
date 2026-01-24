@@ -4,17 +4,10 @@ const { POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_DB, POSTGRES_PASSW
   process.env;
 
 async function query(queryObject: string | QueryConfig) {
-  const client = new Client({
-    host: POSTGRES_HOST,
-    port: Number(POSTGRES_PORT),
-    user: POSTGRES_USER,
-    database: POSTGRES_DB,
-    password: POSTGRES_PASSWORD,
-    ssl: process.env.NODE_ENV === "development" ? false : true,
-  });
+  let client: Client;
 
   try {
-    await client.connect();
+    client = await getNewClient();
     const result = await client.query(queryObject);
 
     return result;
@@ -27,6 +20,22 @@ async function query(queryObject: string | QueryConfig) {
   }
 }
 
+async function getNewClient() {
+  const client = new Client({
+    host: POSTGRES_HOST,
+    port: Number(POSTGRES_PORT),
+    user: POSTGRES_USER,
+    database: POSTGRES_DB,
+    password: POSTGRES_PASSWORD,
+    ssl: process.env.NODE_ENV === "production" ? true : false,
+  });
+
+  await client.connect();
+
+  return client;
+}
+
 export default {
-  query: query,
+  query,
+  getNewClient,
 };
