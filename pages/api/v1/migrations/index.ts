@@ -8,15 +8,9 @@ async function migrations(request: NextApiRequest, response: NextApiResponse) {
 
   console.log("dbClient instanciado");
 
-  // Em produção, usar migrations compiladas; em dev, usar infra/migrations
-  const migrationsDir =
-    process.env.NODE_ENV === "production"
-      ? join(process.cwd(), ".next", "migrations")
-      : join("infra", "migrations");
-
   const defaultMigrationOptions = {
     dbClient: dbClient,
-    dir: migrationsDir,
+    dir: join("infra", "migrations"),
     direction: "up",
     migrationsTable: "pgmigrations",
   } as RunnerOption;
