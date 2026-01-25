@@ -6,6 +6,8 @@ import database from "infra/database";
 async function migrations(request: NextApiRequest, response: NextApiResponse) {
   const dbClient = await database.getNewClient();
 
+  console.log("dbClient instanciado");
+
   const defaultMigrationOptions: RunnerOption = {
     dbClient: dbClient,
     dir: join("infra", "migrations"),
@@ -13,11 +15,17 @@ async function migrations(request: NextApiRequest, response: NextApiResponse) {
     migrationsTable: "pgmigrations",
   };
 
+  console.log("migrationOptions criada");
+
   if (request.method === "GET") {
+    console.log("Rodando migrations no modo dryRun");
+
     const pendingMigrations = await migrationRunner({
       ...defaultMigrationOptions,
       dryRun: true,
     });
+
+    console.log(`Migrations pendentes: ${pendingMigrations}`);
 
     dbClient.end();
 
