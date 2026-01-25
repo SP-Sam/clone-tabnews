@@ -1,3 +1,0 @@
-# Keep infra/migrations in the production build
-!infra/
-!infra/migrations/
