@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run services:up && next dev",
-    "build": "npm run build:migrations && next build",
+    "build": "next build",
     "start": "next start",
     "test": "jest --runInBand",
     "test:watch": "jest --watchAll --runInBand",
@@ -26,8 +26,7 @@
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "migration:create": "node-pg-migrate -m infra/migrations --template-file-name infra/migrations/template/migration-template.ts create -j ts",
-    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up -j ts",
-    "build:migrations": "tsc infra/migrations/**/*.ts --outDir infra/migrations-js --module commonjs"
+    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up -j ts"
   },
   "dependencies": {
     "dotenv": "^16.4.4",
