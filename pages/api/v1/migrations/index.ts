@@ -6,12 +6,13 @@ import database from "infra/database";
 async function migrations(request: NextApiRequest, response: NextApiResponse) {
   const dbClient = await database.getNewClient();
 
-  const defaultMigrationOptions: RunnerOption = {
+  const defaultMigrationOptions = {
     dbClient: dbClient,
     dir: join("infra", "migrations"),
     direction: "up",
     migrationsTable: "pgmigrations",
-  };
+    loader: (filePath: string) => import(filePath),
+  } as RunnerOption;
 
   if (request.method === "GET") {
     const pendingMigrations = await migrationRunner({
