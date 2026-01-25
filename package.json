@@ -26,8 +26,8 @@
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "migration:create": "node-pg-migrate -m infra/migrations --template-file-name infra/migrations/template/migration-template.ts create -j ts",
-    "migration:up": "node-pg-migrate -m infra/migrations-js --envPath .env.development up",
-    "build:migrations": "tsc -p tsconfig.migrations.json"
+    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up -j ts",
+    "build:migrations": "tsc infra/migrations/**/*.ts --outDir infra/migrations-js --module commonjs"
   },
   "dependencies": {
     "dotenv": "^16.4.4",
