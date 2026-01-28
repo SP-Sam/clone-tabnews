@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import migrationRunner, { RunnerOption } from "node-pg-migrate";
+import { runner, RunnerOption } from "node-pg-migrate";
 import { join } from "node:path";
 import database from "infra/database";
 
@@ -20,7 +20,7 @@ async function migrations(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === "GET") {
     console.log("Rodando migrations no modo dryRun");
 
-    const pendingMigrations = await migrationRunner({
+    const pendingMigrations = await runner({
       ...defaultMigrationOptions,
       dryRun: true,
     });
@@ -33,7 +33,7 @@ async function migrations(request: NextApiRequest, response: NextApiResponse) {
   }
 
   if (request.method === "POST") {
-    const executedMigrations = await migrationRunner({
+    const executedMigrations = await runner({
       ...defaultMigrationOptions,
       dryRun: false,
     });
