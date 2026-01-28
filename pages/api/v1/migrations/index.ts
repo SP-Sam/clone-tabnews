@@ -10,7 +10,7 @@ async function migrations(request: NextApiRequest, response: NextApiResponse) {
 
   const defaultMigrationOptions: RunnerOption = {
     dbClient: dbClient,
-    dir: join("infra", "migrations"),
+    dir: join(process.cwd(), "infra", "migrations"),
     direction: "up",
     migrationsTable: "pgmigrations",
   };
