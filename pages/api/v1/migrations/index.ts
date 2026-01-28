@@ -39,7 +39,7 @@ async function migrations(request: NextApiRequest, response: NextApiResponse) {
     return response.status(200).json(executedMigrations);
   }
 
-  dbClient.end();
+  // dbClient.end();
 
   return response.status(405).end();
 }
