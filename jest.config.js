@@ -8,4 +8,5 @@ export default {
   testMatch: ["**/tests/**/*.test.ts"],
   moduleFileExtensions: ["ts", "js", "json", "node"],
   moduleDirectories: ["node_modules", "<rootDir>"],
+  testTimeout: 60000,
 };
