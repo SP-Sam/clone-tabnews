@@ -25,8 +25,8 @@
     "services:down": "docker compose -f infra/compose.yaml down",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
-    "eslint:check": "npx eslint .",
-    "eslint:fix": "npx eslint --fix .",
+    "lint:eslint:check": "npx eslint .",
+    "lint:eslint:fix": "npx eslint --fix .",
     "migration:create": "node-pg-migrate -m infra/migrations --template-file-name infra/migrations/template/migration-template.ts create -j ts",
     "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up -j ts",
     "wait-for-postgres": "node infra/scripts/wait-for-postgres.js"
@@ -54,6 +54,7 @@
     "babel-jest": "^30.2.0",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^17.3.0",
     "jest": "^29.6.2",
