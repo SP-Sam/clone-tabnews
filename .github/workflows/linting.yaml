@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   prettier:
-    name: Prettier
+    name: Prettier and ESLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,3 +16,5 @@ jobs:
       - run: npm ci
 
       - run: npm run lint:prettier:check
+
+      - run: npm run eslint:check
