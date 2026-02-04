@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   prettier:
-    name: Prettier and ESLint
+    name: Prettier
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,5 +16,17 @@ jobs:
       - run: npm ci
 
       - run: npm run lint:prettier:check
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/krypton"
+
+      - run: npm ci
 
       - run: npm run lint:eslint:check
