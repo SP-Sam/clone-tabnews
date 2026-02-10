@@ -3,10 +3,13 @@ import { runner, RunnerOption } from "node-pg-migrate";
 import { Client } from "pg";
 import { join } from "node:path";
 import database from "infra/database";
+import { readdirSync } from "node:fs";
 
 async function migrations(request: NextApiRequest, response: NextApiResponse) {
   const allowedMethods = ["GET", "POST"];
   const requestMethod = request.method;
+
+  console.log("CWD >> ", readdirSync(process.cwd()));
 
   if (!allowedMethods.includes(requestMethod)) {
     return response.status(405).json({
