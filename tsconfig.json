@@ -21,7 +21,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "infra/scripts/wait-for-postgres.js"
+    "infra/scripts/wait-for-postgres.js",
+    "infra/migrations/**/*.js",
+    "infra/migrations/**/*.cjs"
   ],
   "exclude": ["node_modules"]
 }
