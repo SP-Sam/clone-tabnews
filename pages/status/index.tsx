@@ -21,7 +21,7 @@ function UpdatedAt() {
     updatedAtText = new Date(data.updated_at).toLocaleString("pt-BR");
   }
 
-  return <h2>Última atualização: {updatedAtText}</h2>;
+  return <p>Última atualização: {updatedAtText}</p>;
 }
 
 function DataBaseInfos() {
@@ -42,7 +42,7 @@ function DataBaseInfos() {
 
   return (
     <div>
-      <h2>Informações do banco de dados</h2>
+      <h2>Database</h2>
       <p>Máximo de conexões aceitas: {maxConnections}</p>
       <p>Conexões abertas: {openedConnections}</p>
       <p>Versão do banco: {databaseVersion}</p>
