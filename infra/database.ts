@@ -12,11 +12,11 @@ async function query(queryObject: string | QueryConfig) {
 
     return result;
   } catch (error) {
-    console.error("Database error: ", error);
+    console.error(error);
 
     throw error;
   } finally {
-    await client.end();
+    await client?.end();
   }
 }
 
