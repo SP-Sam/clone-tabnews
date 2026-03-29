@@ -1,4 +1,5 @@
 import { Client, QueryConfig } from "pg";
+import { ServiceError } from "./errors";
 
 const { POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_DB, POSTGRES_PASSWORD } =
   process.env;
@@ -12,9 +13,12 @@ async function query(queryObject: string | QueryConfig) {
 
     return result;
   } catch (error) {
-    console.error(error);
+    const serviceErrorObject = new ServiceError({
+      message: "Erro na conexão com o banco ou na query",
+      cause: error,
+    });
 
-    throw error;
+    throw serviceErrorObject;
   } finally {
     await client?.end();
   }
