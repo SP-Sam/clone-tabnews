@@ -1,6 +1,5 @@
 import retry from "async-retry";
 import database from "infra/database";
-import migrator from "models/migrator";
 
 async function waitFowAllServices() {
   await waitForWebServer();
@@ -23,7 +22,13 @@ async function clearDatabase() {
 }
 
 async function runPendingMigrations() {
-  await migrator.runPendingMigrations();
+  const response = await fetch("http://localhost:3000/api/v1/migrations", {
+    method: "POST",
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error("Nao foi possível executar as migrations pendentes.");
+  }
 }
 
 export default {

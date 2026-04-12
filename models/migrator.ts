@@ -1,19 +1,8 @@
 import { Client } from "pg";
-import type { RunnerOption } from "node-pg-migrate";
+import { runner, type RunnerOption } from "node-pg-migrate";
 import { join } from "node:path";
 
 import database from "infra/database";
-
-// import dinâmico indireto para o Jest conseguir carregar um pacote ESM.
-const importModule = new Function("moduleName", "return import(moduleName);") as (
-  moduleName: string,
-) => Promise<typeof import("node-pg-migrate")>;
-
-async function getRunner() {
-  const migrationModule = await importModule("node-pg-migrate");
-
-  return migrationModule.runner;
-}
 
 function createMigrationOptions(dbClient: Client): RunnerOption {
   return {
@@ -30,7 +19,6 @@ async function listPendingMigrations() {
 
   try {
     dbClient = await database.getNewClient();
-    const runner = await getRunner();
 
     const pendingMigrations = await runner({
       ...createMigrationOptions(dbClient),
@@ -48,7 +36,6 @@ async function runPendingMigrations() {
 
   try {
     dbClient = await database.getNewClient();
-    const runner = await getRunner();
 
     const executedMigrations = await runner({
       ...createMigrationOptions(dbClient),
