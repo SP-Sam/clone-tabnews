@@ -1,25 +1,39 @@
 import { Client } from "pg";
-import { runner, RunnerOption } from "node-pg-migrate";
+import type { RunnerOption } from "node-pg-migrate";
 import { join } from "node:path";
 
 import database from "infra/database";
 
-let dbClient: Client;
+// import dinâmico indireto para o Jest conseguir carregar um pacote ESM.
+const importModule = new Function("moduleName", "return import(moduleName);") as (
+  moduleName: string,
+) => Promise<typeof import("node-pg-migrate")>;
 
-const defaultMigrationOptions: RunnerOption = {
-  dbClient: dbClient,
-  dir: join(process.cwd(), "infra", "migrations"),
-  direction: "up",
-  migrationsTable: "pgmigrations",
-};
+async function getRunner() {
+  const migrationModule = await importModule("node-pg-migrate");
+
+  return migrationModule.runner;
+}
+
+function createMigrationOptions(dbClient: Client): RunnerOption {
+  return {
+    dbClient,
+    dir: join(process.cwd(), "infra", "migrations"),
+    direction: "up",
+    log: () => {},
+    migrationsTable: "pgmigrations",
+  };
+}
 
 async function listPendingMigrations() {
+  let dbClient: Client;
+
   try {
     dbClient = await database.getNewClient();
+    const runner = await getRunner();
 
     const pendingMigrations = await runner({
-      ...defaultMigrationOptions,
-      dbClient,
+      ...createMigrationOptions(dbClient),
       dryRun: true,
     });
 
@@ -30,12 +44,14 @@ async function listPendingMigrations() {
 }
 
 async function runPendingMigrations() {
+  let dbClient: Client;
+
   try {
     dbClient = await database.getNewClient();
+    const runner = await getRunner();
 
     const executedMigrations = await runner({
-      ...defaultMigrationOptions,
-      dbClient,
+      ...createMigrationOptions(dbClient),
       dryRun: false,
     });
 
