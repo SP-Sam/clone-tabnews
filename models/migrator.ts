@@ -1,25 +1,27 @@
 import { Client } from "pg";
-import { runner, RunnerOption } from "node-pg-migrate";
+import { runner, type RunnerOption } from "node-pg-migrate";
 import { join } from "node:path";
 
 import database from "infra/database";
 
-let dbClient: Client;
-
-const defaultMigrationOptions: RunnerOption = {
-  dbClient: dbClient,
-  dir: join(process.cwd(), "infra", "migrations"),
-  direction: "up",
-  migrationsTable: "pgmigrations",
-};
+function createMigrationOptions(dbClient: Client): RunnerOption {
+  return {
+    dbClient,
+    dir: join(process.cwd(), "infra", "migrations"),
+    direction: "up",
+    log: () => {},
+    migrationsTable: "pgmigrations",
+  };
+}
 
 async function listPendingMigrations() {
+  let dbClient: Client;
+
   try {
     dbClient = await database.getNewClient();
 
     const pendingMigrations = await runner({
-      ...defaultMigrationOptions,
-      dbClient,
+      ...createMigrationOptions(dbClient),
       dryRun: true,
     });
 
@@ -30,12 +32,13 @@ async function listPendingMigrations() {
 }
 
 async function runPendingMigrations() {
+  let dbClient: Client;
+
   try {
     dbClient = await database.getNewClient();
 
     const executedMigrations = await runner({
-      ...defaultMigrationOptions,
-      dbClient,
+      ...createMigrationOptions(dbClient),
       dryRun: false,
     });
 

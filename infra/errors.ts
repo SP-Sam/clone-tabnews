@@ -42,6 +42,50 @@ export class ServiceError extends Error {
   }
 }
 
+export class ValidationError extends Error {
+  action: string;
+  statusCode: number;
+
+  constructor({ message, action }) {
+    super(message || "Erro de validação");
+
+    this.name = "ValidationError";
+    this.action = action || "Verifique os dados enviados e tente novamente.";
+    this.statusCode = 400;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class NotFoundError extends Error {
+  action: string;
+  statusCode: number;
+
+  constructor({ message, action }) {
+    super(message || "Não foi possível encontrar esse recurso no sistema");
+
+    this.name = "NotFoundError";
+    this.action = action || "Verifique se os parâmetros enviados estão corretos.";
+    this.statusCode = 404;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
 export class MethodNotAllowedError extends Error {
   action: string;
   statusCode: number;

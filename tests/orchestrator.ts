@@ -21,7 +21,18 @@ async function clearDatabase() {
   await database.query("drop schema public cascade; create schema public;");
 }
 
+async function runPendingMigrations() {
+  const response = await fetch("http://localhost:3000/api/v1/migrations", {
+    method: "POST",
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error("Nao foi possível executar as migrations pendentes.");
+  }
+}
+
 export default {
   waitFowAllServices,
   clearDatabase,
+  runPendingMigrations,
 };
