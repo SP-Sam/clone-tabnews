@@ -1,5 +1,5 @@
 import database from "infra/database";
-import { ValidationError } from "infra/errors";
+import { NotFoundError, ValidationError } from "infra/errors";
 
 interface CreateUserDTO {
   username: string;
@@ -59,13 +59,13 @@ async function create(userInputValues: CreateUserDTO) {
   async function runInsertQuery(userInputValues: CreateUserDTO) {
     const result = await database.query({
       text: `
-      INSERT INTO
-        users (username, email, password)
-      VALUES
-        ($1, $2, $3)
-      RETURNING
-        *
-      ;`,
+        INSERT INTO
+          users (username, email, password)
+        VALUES
+          ($1, $2, $3)
+        RETURNING
+          *
+        ;`,
       values: [userInputValues.username, userInputValues.email, userInputValues.password],
     });
 
@@ -73,6 +73,37 @@ async function create(userInputValues: CreateUserDTO) {
   }
 }
 
+async function findOneByUsername(username: string) {
+  const userFound = await runSelectQuery(username);
+
+  return userFound;
+
+  async function runSelectQuery(username: string) {
+    const result = await database.query({
+      text: `
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          LOWER(username) = LOWER($1)
+        LIMIT 1
+        ;`,
+      values: [username],
+    });
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O username informado não foi encontrado no sistema",
+        action: "Verifique se o username digitado está correto",
+      });
+    }
+
+    return result.rows[0];
+  }
+}
+
 export default {
   create,
+  findOneByUsername,
 };
