@@ -1,5 +1,6 @@
 import database from "infra/database";
 import { NotFoundError, ValidationError } from "infra/errors";
+import password from "models/password";
 
 interface CreateUserDTO {
   username: string;
@@ -10,6 +11,7 @@ interface CreateUserDTO {
 async function create(userInputValues: CreateUserDTO) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
+  await hashPasswordInObject(userInputValues);
 
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
@@ -54,6 +56,12 @@ async function create(userInputValues: CreateUserDTO) {
         action: "Utilize outro username para realizar o cadastro.",
       });
     }
+  }
+
+  async function hashPasswordInObject(userInputValues: CreateUserDTO) {
+    const hashedPassword = await password.hash(userInputValues.password);
+
+    userInputValues.password = hashedPassword;
   }
 
   async function runInsertQuery(userInputValues: CreateUserDTO) {
