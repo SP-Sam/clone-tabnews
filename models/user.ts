@@ -2,7 +2,7 @@ import database from "infra/database";
 import { NotFoundError, ValidationError } from "infra/errors";
 import password from "models/password";
 
-interface UserDTO {
+export interface UserDTO {
   id?: string;
   username?: string;
   email?: string;
