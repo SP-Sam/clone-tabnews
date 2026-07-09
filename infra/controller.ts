@@ -3,6 +3,7 @@ import {
   InternalServerError,
   MethodNotAllowedError,
   NotFoundError,
+  UnauthorizedError,
   ValidationError,
 } from "./errors";
 
@@ -13,13 +14,16 @@ function onNoMatchHandler(_request: NextApiRequest, response: NextApiResponse) {
 }
 
 function onErrorHandler(error, _request: NextApiRequest, response: NextApiResponse) {
-  if (error instanceof ValidationError || error instanceof NotFoundError) {
+  if (
+    error instanceof ValidationError ||
+    error instanceof NotFoundError ||
+    error instanceof UnauthorizedError
+  ) {
     return response.status(error.statusCode).json(error);
   }
 
   const errorObject = new InternalServerError({
     cause: error,
-    statusCode: error.statusCode,
   });
 
   console.error(errorObject);
